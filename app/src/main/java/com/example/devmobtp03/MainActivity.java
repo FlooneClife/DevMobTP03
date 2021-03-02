@@ -2,14 +2,24 @@ package com.example.devmobtp03;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private TextView ID;
     private Button validate;
-
 
     private static final int MAX_LENGTH = 6;
 
@@ -36,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         return randomStringBuilder.toString();
     }
 
+    String rand = random();
+
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putString("myAge", String.valueOf(age.getText()));
         savedInstanceState.putString("myPhone", String.valueOf(phone.getText()));
         savedInstanceState.putString("myID", String.valueOf(ID.getText()));
-        Toast.makeText(this, "Etat de l'activité sauvegardé", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Etat de l'activité sauvegardé", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -76,17 +87,44 @@ public class MainActivity extends AppCompatActivity {
         validate = findViewById(R.id.validate);
         ID = findViewById(R.id.id);
 
-        String rand = random();
         ID.setText("ID : " + rand);
 
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(this, com.example.devmobtp03.MainActivity.class);
-//                startActivity(intent);
+                String filename = makeFileName();
+                writeToFile(filename);
+                Intent intent = new Intent(v.getContext(), com.example.devmobtp03.AfficherInfos.class);
+                intent.putExtra("filename", filename);
+                startActivity(intent);
             }
         });
 
+    }
+
+    private void writeToFile(String filename) {
+        try {
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+            StringBuilder bs = new StringBuilder();
+            bs.append(ID.getText() + "\n");
+            bs.append("Nom : " + name.getText() + "\n");
+            bs.append("Prenom : " + firstname.getText() + "\n");
+            bs.append("Age : " + age.getText() + "\n");
+            bs.append("Telephone : " + phone.getText() + "\n");
+            bs.append("Mot de passe : " + password.getText() + "\n");
+            fos.write(bs.toString().getBytes());
+            fos.close();
+        } catch (IOException e) {
+            Log.e("Exception", "Echec lors de l'écriture du fichier: " + e.toString());
+        }
+    }
+
+    private String makeFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name.getText());
+        sb.append(rand);
+        sb.append(".txt");
+        return sb.toString();
     }
 
 }
