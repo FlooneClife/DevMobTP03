@@ -61,6 +61,13 @@
             android:layout_height="wrap_content"
             android:textSize="20dp" />
 
+        <Button
+            android:id="@+id/roomdb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Planning Room DB" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

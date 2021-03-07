@@ -3,6 +3,7 @@ package com.example.devmobtp03;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class Planning extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class Planning extends AppCompatActivity {
     private TextView task;
     private Button jour1;
     private Button jour2;
+    private Button room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class Planning extends AppCompatActivity {
         task = findViewById(R.id.testtask);
         jour1 = findViewById(R.id.jour1);
         jour2 = findViewById(R.id.jour2);
+        room = findViewById(R.id.roomdb);
 
         Intent intent = getIntent();
         String filename1 = intent.getStringExtra("jour1");
@@ -70,6 +74,14 @@ public class Planning extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 planningModel.getTask().setValue(task2);
+            }
+        });
+
+        room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), com.example.devmobtp03.Planning2.class);
+                startActivity(intent);
             }
         });
 
